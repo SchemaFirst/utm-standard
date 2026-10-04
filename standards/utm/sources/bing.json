@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "bing",
+  "canonical_name": "Microsoft Bing",
+  "utm_source": "bing",
+  "type": "search",
+  "aliases": [
+    "bing.com",
+    "microsoft bing"
+  ],
+  "contexts": {
+    "paid_search": {
+      "utm_medium": "cpc",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Search"
+    },
+    "organic_search": {
+      "utm_medium": "organic",
+      "provenance": "google-defined",
+      "google_default_channel_intent": "Organic Search"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "email",
+  "canonical_name": "Email",
+  "utm_source": "email",
+  "type": "email",
+  "aliases": [
+    "e-mail",
+    "marketing email"
+  ],
+  "contexts": {
+    "marketing_email": {
+      "utm_medium": "email",
+      "provenance": "google-defined",
+      "google_default_channel_intent": "Email"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  },
+  "notes": "Organizations that require newsletter, publication, or sending-system granularity should override utm_source through an organizational profile while retaining medium=email."
+}

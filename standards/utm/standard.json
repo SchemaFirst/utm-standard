@@ -1,0 +1,151 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-standard.schema.json",
+  "standard": "schemafirst-utm",
+  "version": "0.1.0",
+  "status": "draft",
+  "references": [
+    {
+      "title": "URL builders: Collect campaign data with custom URLs",
+      "url": "https://support.google.com/analytics/answer/10917952",
+      "publisher": "Google Analytics"
+    },
+    {
+      "title": "Default channel group",
+      "url": "https://support.google.com/analytics/answer/9756891",
+      "publisher": "Google Analytics"
+    },
+    {
+      "title": "Traffic-source dimensions, manual tagging, and auto-tagging",
+      "url": "https://support.google.com/analytics/answer/11242870",
+      "publisher": "Google Analytics"
+    },
+    {
+      "title": "About traffic-source dimensions",
+      "url": "https://support.google.com/analytics/answer/15612152",
+      "publisher": "Google Analytics"
+    }
+  ],
+  "parameters": {
+    "utm_source": {
+      "required": true,
+      "value_source": "source_registry",
+      "provenance": "schemafirst-default",
+      "organization_override_permitted": true,
+      "notes": "SchemaFirst requires source for every conforming manually tagged campaign URL."
+    },
+    "utm_medium": {
+      "required": true,
+      "value_source": "source_registry_context",
+      "provenance": "schemafirst-default",
+      "organization_override_permitted": true,
+      "notes": "Resolved from canonical source plus distribution context."
+    },
+    "utm_campaign": {
+      "required": true,
+      "value_source": "campaign",
+      "provenance": "schemafirst-default",
+      "organization_override_permitted": false,
+      "format": {
+        "case": "lowercase",
+        "separator": "_",
+        "allowed_characters": "a-z0-9_"
+      },
+      "notes": "Use approved campaign.slug exactly when present; otherwise deterministically derive from approved campaign.name."
+    },
+    "utm_id": {
+      "required": false,
+      "recommended": true,
+      "value_source": "campaign_id",
+      "provenance": "google-defined",
+      "organization_override_permitted": true,
+      "notes": "Use an existing durable campaign identifier. Do not invent one solely to populate this parameter."
+    },
+    "utm_source_platform": {
+      "required": false,
+      "recommended": true,
+      "value_source": "source_platform",
+      "provenance": "google-defined",
+      "organization_override_permitted": true
+    },
+    "utm_content": {
+      "required": false,
+      "recommended": false,
+      "value_source": "asset_context",
+      "provenance": "google-defined",
+      "organization_override_permitted": true
+    },
+    "utm_term": {
+      "required": false,
+      "recommended": false,
+      "value_source": "keyword_context",
+      "provenance": "google-defined",
+      "organization_override_permitted": true
+    },
+    "utm_creative_format": {
+      "required": false,
+      "recommended": false,
+      "value_source": "creative_context",
+      "provenance": "google-defined",
+      "organization_override_permitted": true,
+      "notes": "Google documents this parameter but currently notes it is not reported in Google Analytics properties."
+    },
+    "utm_marketing_tactic": {
+      "required": false,
+      "recommended": false,
+      "value_source": "tactic_context",
+      "provenance": "google-defined",
+      "organization_override_permitted": true,
+      "notes": "Google documents this parameter but currently notes it is not reported in Google Analytics properties."
+    }
+  },
+  "campaign": {
+    "preferred_input": "campaign.slug",
+    "fallback_input": "campaign.name",
+    "slug_rules": {
+      "case": "lowercase",
+      "separator": "_",
+      "allowed_characters": "a-z0-9_",
+      "remove_punctuation": true,
+      "collapse_repeated_separators": true,
+      "trim_separators": true,
+      "stable_for_campaign_lifetime": true,
+      "prohibited_components": [
+        "source",
+        "medium",
+        "platform",
+        "placement",
+        "creative",
+        "asset_version",
+        "audience",
+        "ad_set",
+        "keyword"
+      ],
+      "date_policy": "only_when_part_of_approved_campaign_identity"
+    }
+  },
+  "generation": {
+    "minimum_context": [
+      "campaign",
+      "source",
+      "distribution_context"
+    ],
+    "unknown_context_behavior": "requires_context",
+    "precedence": [
+      "organization_canonical_value",
+      "schemafirst_canonical_value",
+      "schemafirst_deterministic_derivation",
+      "requires_context"
+    ],
+    "parameter_order": [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_id",
+      "utm_source_platform",
+      "utm_content",
+      "utm_term",
+      "utm_creative_format",
+      "utm_marketing_tactic"
+    ]
+  }
+}

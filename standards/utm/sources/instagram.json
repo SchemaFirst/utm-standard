@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "instagram",
+  "canonical_name": "Instagram",
+  "utm_source": "instagram",
+  "type": "social",
+  "aliases": [
+    "instagram.com",
+    "ig",
+    "insta"
+  ],
+  "contexts": {
+    "organic": {
+      "utm_medium": "social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Organic Social"
+    },
+    "paid": {
+      "utm_medium": "paid_social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Social"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  }
+}

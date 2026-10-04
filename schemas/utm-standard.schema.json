@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemafirst.org/schemas/utm-standard.schema.json",
+  "title": "SchemaFirst UTM Standard",
+  "description": "Schema for the SchemaFirst UTM standard and conforming organizational profiles.",
+  "type": "object",
+  "required": [
+    "standard",
+    "version",
+    "parameters",
+    "campaign",
+    "generation"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "standard": {
+      "const": "schemafirst-utm"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "extends": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "organization": {
+      "type": "string",
+      "minLength": 1
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "url"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "required": [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "properties": {
+        "utm_source": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_medium": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_campaign": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_id": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_source_platform": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_content": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_term": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_creative_format": {
+          "$ref": "#/$defs/parameterRule"
+        },
+        "utm_marketing_tactic": {
+          "$ref": "#/$defs/parameterRule"
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/parameterRule"
+      }
+    },
+    "campaign": {
+      "type": "object",
+      "required": [
+        "preferred_input",
+        "fallback_input",
+        "slug_rules"
+      ],
+      "properties": {
+        "preferred_input": {
+          "const": "campaign.slug"
+        },
+        "fallback_input": {
+          "const": "campaign.name"
+        },
+        "slug_rules": {
+          "type": "object",
+          "required": [
+            "case",
+            "separator",
+            "allowed_characters",
+            "remove_punctuation",
+            "collapse_repeated_separators",
+            "trim_separators",
+            "stable_for_campaign_lifetime",
+            "prohibited_components"
+          ],
+          "properties": {
+            "case": {
+              "const": "lowercase"
+            },
+            "separator": {
+              "const": "_"
+            },
+            "allowed_characters": {
+              "const": "a-z0-9_"
+            },
+            "remove_punctuation": {
+              "const": true
+            },
+            "collapse_repeated_separators": {
+              "const": true
+            },
+            "trim_separators": {
+              "const": true
+            },
+            "stable_for_campaign_lifetime": {
+              "const": true
+            },
+            "prohibited_components": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "date_policy": {
+              "type": "string",
+              "enum": [
+                "only_when_part_of_approved_campaign_identity"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "generation": {
+      "type": "object",
+      "required": [
+        "minimum_context",
+        "unknown_context_behavior",
+        "precedence"
+      ],
+      "properties": {
+        "minimum_context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "contains": {
+            "const": "campaign"
+          },
+          "minContains": 1,
+          "uniqueItems": true
+        },
+        "unknown_context_behavior": {
+          "const": "requires_context"
+        },
+        "precedence": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "organization_canonical_value"
+            },
+            {
+              "const": "schemafirst_canonical_value"
+            },
+            {
+              "const": "schemafirst_deterministic_derivation"
+            },
+            {
+              "const": "requires_context"
+            }
+          ],
+          "items": false
+        },
+        "parameter_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "object",
+          "string",
+          "boolean",
+          "array",
+          "number",
+          "null"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "parameterRule": {
+      "type": "object",
+      "required": [
+        "required",
+        "value_source",
+        "provenance"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "recommended": {
+          "type": "boolean"
+        },
+        "value_source": {
+          "type": "string",
+          "enum": [
+            "source_registry",
+            "source_registry_context",
+            "campaign",
+            "campaign_id",
+            "source_platform",
+            "asset_context",
+            "keyword_context",
+            "creative_context",
+            "tactic_context",
+            "organization_defined"
+          ]
+        },
+        "provenance": {
+          "type": "string",
+          "enum": [
+            "google-defined",
+            "schemafirst-default",
+            "organization-defined"
+          ]
+        },
+        "organization_override_permitted": {
+          "type": "boolean"
+        },
+        "format": {
+          "type": "object",
+          "properties": {
+            "case": {
+              "type": "string"
+            },
+            "separator": {
+              "type": "string"
+            },
+            "allowed_characters": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

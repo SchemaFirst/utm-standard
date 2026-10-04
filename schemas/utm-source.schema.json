@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "title": "SchemaFirst UTM Source Registry Record",
+  "description": "Schema for a canonical source and its distribution-context-to-medium mappings.",
+  "type": "object",
+  "required": [
+    "id",
+    "canonical_name",
+    "utm_source",
+    "type",
+    "contexts",
+    "provenance"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "canonical_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "utm_source": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "search",
+        "social",
+        "video",
+        "email",
+        "sms",
+        "referral",
+        "affiliate",
+        "display",
+        "audio",
+        "other"
+      ]
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "contexts": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z0-9_]+$": {
+          "type": "object",
+          "required": [
+            "utm_medium",
+            "provenance"
+          ],
+          "properties": {
+            "utm_medium": {
+              "type": "string",
+              "pattern": "^[a-z0-9_]+$"
+            },
+            "utm_source_platform": {
+              "type": "string"
+            },
+            "provenance": {
+              "type": "string",
+              "enum": [
+                "google-defined",
+                "schemafirst-default",
+                "organization-defined"
+              ]
+            },
+            "google_default_channel_intent": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "utm_semantics",
+        "canonical_value"
+      ],
+      "properties": {
+        "utm_semantics": {
+          "type": "string"
+        },
+        "canonical_value": {
+          "type": "string"
+        },
+        "reference_urls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "linkedin",
+  "canonical_name": "LinkedIn",
+  "utm_source": "linkedin",
+  "type": "social",
+  "aliases": [
+    "linkedin.com",
+    "linkedin ads"
+  ],
+  "contexts": {
+    "organic": {
+      "utm_medium": "social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Organic Social"
+    },
+    "paid": {
+      "utm_medium": "paid_social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Social",
+      "notes": "Google gives paid_social as a best-practice medium example; SchemaFirst adopts it as the canonical paid-social value."
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "youtube",
+  "canonical_name": "YouTube",
+  "utm_source": "youtube",
+  "type": "video",
+  "aliases": [
+    "youtube.com",
+    "youtu.be"
+  ],
+  "contexts": {
+    "organic_video": {
+      "utm_medium": "video",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Organic Video"
+    },
+    "paid_video": {
+      "utm_medium": "paid_video",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Video"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  }
+}

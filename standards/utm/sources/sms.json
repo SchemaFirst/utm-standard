@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "sms",
+  "canonical_name": "SMS",
+  "utm_source": "sms",
+  "type": "sms",
+  "aliases": [
+    "text",
+    "text message"
+  ],
+  "contexts": {
+    "message": {
+      "utm_medium": "sms",
+      "provenance": "google-defined",
+      "google_default_channel_intent": "SMS"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  }
+}

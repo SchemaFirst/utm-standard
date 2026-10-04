@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "google",
+  "canonical_name": "Google",
+  "utm_source": "google",
+  "type": "search",
+  "aliases": [
+    "google.com",
+    "google search"
+  ],
+  "contexts": {
+    "paid_search": {
+      "utm_medium": "cpc",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Search"
+    },
+    "organic_search": {
+      "utm_medium": "organic",
+      "provenance": "google-defined",
+      "google_default_channel_intent": "Organic Search"
+    },
+    "display": {
+      "utm_medium": "display",
+      "provenance": "google-defined",
+      "google_default_channel_intent": "Display"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  },
+  "notes": "Google Ads auto-tagging may provide richer attribution. This record governs SchemaFirst manual UTM generation, not replacement of auto-tagging."
+}
