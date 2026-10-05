@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "x",
+  "canonical_name": "X",
+  "utm_source": "x",
+  "type": "social",
+  "aliases": [
+    "twitter",
+    "twitter.com",
+    "x.com",
+    "t.co"
+  ],
+  "contexts": {
+    "organic": {
+      "utm_medium": "social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Organic Social"
+    },
+    "paid": {
+      "utm_medium": "paid_social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Paid Social"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  },
+  "notes": "Canonical value follows the platform's current name. The former name and the t.co link shortener are registered as aliases so legacy and referrer-derived inputs resolve to one source."
+}
