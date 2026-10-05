@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "id": "whatsapp",
+  "canonical_name": "WhatsApp",
+  "utm_source": "whatsapp",
+  "type": "social",
+  "aliases": [
+    "wa.me",
+    "whatsapp.com",
+    "web.whatsapp.com"
+  ],
+  "contexts": {
+    "organic": {
+      "utm_medium": "social",
+      "provenance": "schemafirst-default",
+      "google_default_channel_intent": "Organic Social"
+    }
+  },
+  "provenance": {
+    "utm_semantics": "google-defined",
+    "canonical_value": "schemafirst-default",
+    "reference_urls": [
+      "https://support.google.com/analytics/answer/10917952",
+      "https://support.google.com/analytics/answer/9756891"
+    ]
+  },
+  "notes": "Covers links shared in WhatsApp chats, groups, channels and status updates. Click-to-WhatsApp ads are bought through Meta Ads and are not a WhatsApp-sourced paid context, so only organic is defined."
+}

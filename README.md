@@ -22,6 +22,11 @@ The starter registry intentionally covers a conservative set of common sources:
 - YouTube
 - Email
 - SMS
+- X
+- Threads
+- Pinterest
+- TikTok
+- WhatsApp
 
 Ambiguous or profile-dependent cases should be added deliberately rather than inferred.
 
