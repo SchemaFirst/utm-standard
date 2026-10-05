@@ -1,0 +1,14 @@
+{
+  "description": "Unknown source",
+  "input": {
+    "campaign": {
+      "name": "Spring Product Launch"
+    },
+    "source": "myspace",
+    "distribution-context": "organic"
+  },
+  "expected": {
+    "status": "unknown-source",
+    "source": "myspace"
+  }
+}

@@ -1,31 +1,36 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "$schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
   "id": "reddit",
-  "canonical_name": "Reddit",
-  "utm_source": "reddit",
-  "type": "social",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "display-name": "Reddit",
+  "canonical-source": "reddit",
   "aliases": [
     "reddit.com",
-    "reddit ads"
+    "old.reddit.com"
   ],
+  "category": "social",
   "contexts": {
     "organic": {
+      "description": "Unpaid posts and comments.",
       "utm_medium": "social",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Organic Social"
+      "intended-google-channel": "Organic Social"
     },
     "paid": {
+      "description": "Promoted posts and Reddit Ads.",
       "utm_medium": "paid_social",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Paid Social"
+      "intended-google-channel": "Paid Social"
     }
   },
+  "notes": [],
   "provenance": {
-    "utm_semantics": "google-defined",
-    "canonical_value": "schemafirst-default",
-    "reference_urls": [
-      "https://support.google.com/analytics/answer/10917952",
-      "https://support.google.com/analytics/answer/9756891"
-    ]
-  }
+    "canonical-source": "schemafirst-default",
+    "contexts.organic.utm_medium": "google-defined",
+    "contexts.paid.utm_medium": "schemafirst-default",
+    "aliases": "schemafirst-default",
+    "explanation": "Follows the same social mapping as other social platforms."
+  },
+  "references": [
+    "https://support.google.com/analytics/answer/9756891"
+  ]
 }

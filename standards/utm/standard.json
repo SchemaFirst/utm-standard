@@ -1,142 +1,200 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-standard.schema.json",
-  "standard": "schemafirst-utm",
-  "version": "0.1.0",
+  "$schema": "https://www.schemafirst.org/schemas/utm-standard.schema.json",
+  "$id": "https://www.schemafirst.org/standards/utm/0.2",
+  "name": "SchemaFirst UTM Standard",
+  "id": "utm",
+  "version": "0.2.0",
   "status": "draft",
-  "references": [
-    {
-      "title": "URL builders: Collect campaign data with custom URLs",
-      "url": "https://support.google.com/analytics/answer/10917952",
-      "publisher": "Google Analytics"
-    },
-    {
-      "title": "Default channel group",
-      "url": "https://support.google.com/analytics/answer/9756891",
-      "publisher": "Google Analytics"
-    },
-    {
-      "title": "Traffic-source dimensions, manual tagging, and auto-tagging",
-      "url": "https://support.google.com/analytics/answer/11242870",
-      "publisher": "Google Analytics"
-    },
-    {
-      "title": "About traffic-source dimensions",
-      "url": "https://support.google.com/analytics/answer/15612152",
-      "publisher": "Google Analytics"
-    }
-  ],
-  "parameters": {
-    "utm_source": {
-      "required": true,
-      "value_source": "source_registry",
-      "provenance": "schemafirst-default",
-      "organization_override_permitted": true,
-      "notes": "SchemaFirst requires source for every conforming manually tagged campaign URL."
-    },
-    "utm_medium": {
-      "required": true,
-      "value_source": "source_registry_context",
-      "provenance": "schemafirst-default",
-      "organization_override_permitted": true,
-      "notes": "Resolved from canonical source plus distribution context."
-    },
-    "utm_campaign": {
-      "required": true,
-      "value_source": "campaign",
-      "provenance": "schemafirst-default",
-      "organization_override_permitted": false,
-      "format": {
-        "case": "lowercase",
-        "separator": "_",
-        "allowed_characters": "a-z0-9_"
-      },
-      "notes": "Use approved campaign.slug exactly when present; otherwise deterministically derive from approved campaign.name."
-    },
-    "utm_id": {
-      "required": false,
-      "recommended": true,
-      "value_source": "campaign_id",
-      "provenance": "google-defined",
-      "organization_override_permitted": true,
-      "notes": "Use an existing durable campaign identifier. Do not invent one solely to populate this parameter."
-    },
-    "utm_source_platform": {
-      "required": false,
-      "recommended": true,
-      "value_source": "source_platform",
-      "provenance": "google-defined",
-      "organization_override_permitted": true
-    },
-    "utm_content": {
-      "required": false,
-      "recommended": false,
-      "value_source": "asset_context",
-      "provenance": "google-defined",
-      "organization_override_permitted": true
-    },
-    "utm_term": {
-      "required": false,
-      "recommended": false,
-      "value_source": "keyword_context",
-      "provenance": "google-defined",
-      "organization_override_permitted": true
-    },
-    "utm_creative_format": {
-      "required": false,
-      "recommended": false,
-      "value_source": "creative_context",
-      "provenance": "google-defined",
-      "organization_override_permitted": true,
-      "notes": "Google documents this parameter but currently notes it is not reported in Google Analytics properties."
-    },
-    "utm_marketing_tactic": {
-      "required": false,
-      "recommended": false,
-      "value_source": "tactic_context",
-      "provenance": "google-defined",
-      "organization_override_permitted": true,
-      "notes": "Google documents this parameter but currently notes it is not reported in Google Analytics properties."
-    }
+  "updated-at": "2026-10-04",
+  "repository": "https://github.com/SchemaFirst/utm-standard",
+  "license": "Apache-2.0",
+  "summary": "Deterministic rules for generating UTM parameters. Given the same campaign, source, and distribution context, two conforming agents generate the same UTM.",
+  "principle": "Same context + same standard = same UTM.",
+  "source-registry": {
+    "index": "https://www.schemafirst.org/standards/utm/sources/index.json",
+    "record-url-template": "https://www.schemafirst.org/standards/utm/sources/{source}.json",
+    "versioned-independently": true
   },
-  "campaign": {
-    "preferred_input": "campaign.slug",
-    "fallback_input": "campaign.name",
-    "slug_rules": {
-      "case": "lowercase",
-      "separator": "_",
-      "allowed_characters": "a-z0-9_",
-      "remove_punctuation": true,
-      "collapse_repeated_separators": true,
-      "trim_separators": true,
-      "stable_for_campaign_lifetime": true,
-      "prohibited_components": [
-        "source",
-        "medium",
-        "platform",
-        "placement",
-        "creative",
-        "asset_version",
-        "audience",
-        "ad_set",
-        "keyword"
-      ],
-      "date_policy": "only_when_part_of_approved_campaign_identity"
-    }
-  },
-  "generation": {
-    "minimum_context": [
+  "inputs": {
+    "required": [
       "campaign",
       "source",
-      "distribution_context"
+      "distribution-context"
     ],
-    "unknown_context_behavior": "requires_context",
+    "optional": [
+      "destination-url",
+      "campaign-id",
+      "source-platform",
+      "content",
+      "term",
+      "creative-format",
+      "marketing-tactic"
+    ],
+    "definitions": {
+      "campaign": "The approved campaign identity. An object with `slug` (preferred) and/or `name`.",
+      "source": "A canonical source or alias from the Source Registry, e.g. `linkedin`.",
+      "distribution-context": "How the asset is distributed for that source, e.g. `organic`, `paid`, `owned`, `display`. Must be a context supported by the source record.",
+      "destination-url": "The absolute URL the tracking parameters are appended to."
+    }
+  },
+  "parameters": [
+    {
+      "name": "utm_source",
+      "requirement": "required",
+      "value-source": "Source Registry",
+      "derivation": "The `canonical-source` of the resolved source record.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "source-records-only",
+      "google-meaning": "The referrer of the traffic, such as a search engine, newsletter, or other source."
+    },
+    {
+      "name": "utm_medium",
+      "requirement": "required",
+      "value-source": "Source + distribution context",
+      "derivation": "`contexts[distribution-context].utm_medium` of the resolved source record.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "source-records-only",
+      "google-meaning": "The marketing medium, such as cpc, banner, or email newsletter."
+    },
+    {
+      "name": "utm_campaign",
+      "requirement": "required",
+      "value-source": "Approved campaign identity",
+      "derivation": "`campaign.slug` exactly if present; otherwise the campaign slug algorithm applied to `campaign.name`.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": false,
+      "google-meaning": "The name of the campaign, product, promotion, or other identifier."
+    },
+    {
+      "name": "utm_id",
+      "requirement": "recommended",
+      "value-source": "Campaign system",
+      "derivation": "The campaign ID from the system of record, passed through unchanged.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "The campaign ID used to identify a specific campaign or promotion."
+    },
+    {
+      "name": "utm_source_platform",
+      "requirement": "recommended",
+      "value-source": "Platform",
+      "derivation": "The buying or management platform directing the traffic, when one exists. Normalized with the value format rule.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "The platform responsible for directing traffic to a given property, such as a buying platform that sets budgets and targeting criteria.",
+      "applies-when": "A buying or management platform directs the traffic."
+    },
+    {
+      "name": "utm_content",
+      "requirement": "optional",
+      "value-source": "Creative / asset",
+      "derivation": "The creative or asset identifier, normalized with the value format rule.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "Used to differentiate ads or links that point to the same URL."
+    },
+    {
+      "name": "utm_term",
+      "requirement": "optional",
+      "value-source": "Keyword / targeting",
+      "derivation": "The paid keyword or targeting term, normalized with the value format rule.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "Identifies paid search keywords."
+    },
+    {
+      "name": "utm_creative_format",
+      "requirement": "optional",
+      "value-source": "Creative format",
+      "derivation": "The creative format, normalized with the value format rule.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "The type of creative, such as display, native, video, or search."
+    },
+    {
+      "name": "utm_marketing_tactic",
+      "requirement": "optional",
+      "value-source": "Marketing tactic",
+      "derivation": "The targeting criteria or tactic, normalized with the value format rule.",
+      "semantics": "google-defined",
+      "default-basis": "schemafirst-default",
+      "overridable": "requirement",
+      "google-meaning": "The targeting criteria applied to a campaign, such as remarketing or prospecting."
+    }
+  ],
+  "minimum-conforming-set": [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign"
+  ],
+  "campaign-naming": {
+    "rule": "utm_campaign represents campaign identity. It is not a container for every available marketing dimension.",
     "precedence": [
-      "organization_canonical_value",
-      "schemafirst_canonical_value",
-      "schemafirst_deterministic_derivation",
-      "requires_context"
+      "If `campaign.slug` exists, use it exactly. Do not re-normalize it.",
+      "Otherwise derive the slug from `campaign.name` with the slug algorithm.",
+      "If neither exists, return `requires-context` with `campaign` in `missing`."
     ],
-    "parameter_order": [
+    "slug-algorithm": [
+      "Apply Unicode NFKD normalization and remove combining marks.",
+      "Convert to lowercase.",
+      "Replace every run of characters outside a-z and 0-9 with a single underscore.",
+      "Trim leading and trailing underscores."
+    ],
+    "constraints": {
+      "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$",
+      "character-set": "a-z, 0-9 and _",
+      "separator": "_",
+      "stable-for-campaign-lifetime": true
+    },
+    "must-not-add-unless-part-of-identity": [
+      "source",
+      "medium",
+      "platform",
+      "placement",
+      "creative",
+      "audience",
+      "ad-set",
+      "keyword",
+      "date",
+      "year",
+      "quarter"
+    ],
+    "examples": [
+      {
+        "input": {
+          "name": "Spring Product Launch"
+        },
+        "utm_campaign": "spring_product_launch"
+      },
+      {
+        "input": {
+          "slug": "spring_product_launch",
+          "name": "Spring Product Launch 2026"
+        },
+        "utm_campaign": "spring_product_launch"
+      }
+    ]
+  },
+  "value-format": {
+    "applies-to": [
+      "utm_source_platform",
+      "utm_content",
+      "utm_term",
+      "utm_creative_format",
+      "utm_marketing_tactic"
+    ],
+    "rule": "Apply the campaign slug algorithm. Organization-owned identifiers in utm_id are passed through unchanged."
+  },
+  "url-assembly": {
+    "parameter-order": [
       "utm_source",
       "utm_medium",
       "utm_campaign",
@@ -146,6 +204,127 @@
       "utm_term",
       "utm_creative_format",
       "utm_marketing_tactic"
+    ],
+    "rules": [
+      "Remove any existing utm_* parameters from the destination URL.",
+      "Preserve all other existing query parameters in their original order.",
+      "Append UTM parameters after existing parameters in `parameter-order`.",
+      "Omit parameters that have no value. Never emit an empty parameter.",
+      "Percent-encode values per RFC 3986. Conforming values require no encoding.",
+      "Preserve the URL fragment after the query string."
     ]
-  }
+  },
+  "generation": {
+    "steps": [
+      "Resolve `source` to a registry record by exact match on `canonical-source` or `aliases`, case-insensitive.",
+      "Resolve `distribution-context` against the record's `contexts`.",
+      "Set utm_source and utm_medium from the record.",
+      "Set utm_campaign from campaign naming precedence.",
+      "Set recommended and optional parameters only from supplied inputs. Never invent values.",
+      "Apply the organization profile, if any.",
+      "Assemble the URL using `url-assembly`."
+    ],
+    "missing-context": {
+      "behavior": "Do not guess. Return a requires-context response listing every missing required input.",
+      "response": {
+        "status": "requires-context",
+        "missing": [
+          "distribution-context"
+        ]
+      }
+    },
+    "unknown-source": {
+      "behavior": "Do not invent a source. Return an unknown-source response.",
+      "response": {
+        "status": "unknown-source",
+        "source": "<input>"
+      }
+    },
+    "unsupported-context": {
+      "behavior": "Do not substitute a different context. Return an unsupported-context response listing supported contexts.",
+      "response": {
+        "status": "unsupported-context",
+        "source": "<canonical-source>",
+        "supported": [
+          "<context>"
+        ]
+      }
+    },
+    "success-response": {
+      "status": "ok",
+      "standard-version": "0.2.0",
+      "parameters": {
+        "utm_source": "linkedin",
+        "utm_medium": "social",
+        "utm_campaign": "spring_product_launch"
+      },
+      "url": "https://example.com/product?utm_source=linkedin&utm_medium=social&utm_campaign=spring_product_launch"
+    }
+  },
+  "provenance-classes": {
+    "google-defined": "Semantics, supported parameters, channel behavior, and documented recommendations from Google Analytics.",
+    "schemafirst-default": "Canonical implementation decisions made by SchemaFirst for deterministic agent generation. Not authored or endorsed by Google.",
+    "organization-defined": "Values supplied by the adopting organization through an explicit organization profile. Whether a default may be replaced is stated by each parameter's `overridable`."
+  },
+  "organization-profile": {
+    "extends-value": "https://www.schemafirst.org/standards/utm/0.2",
+    "precedence": "Organization profile > SchemaFirst default. Google-defined parameter semantics cannot be overridden.",
+    "permitted": [
+      "Require recommended or optional parameters.",
+      "Define proprietary source records.",
+      "Define additional distribution contexts.",
+      "Override defaults marked as overridable.",
+      "Define where organization-owned values come from."
+    ],
+    "not-permitted": [
+      "Redefine the meaning of Google-defined UTM parameters.",
+      "Remove a parameter from the minimum conforming set.",
+      "Change the campaign slug algorithm."
+    ],
+    "example": {
+      "extends": "https://www.schemafirst.org/standards/utm/0.2",
+      "organization": "Example Company",
+      "overrides": {
+        "utm_id": {
+          "required": true
+        }
+      }
+    }
+  },
+  "versioning": {
+    "scheme": "semver",
+    "breaking-changes-require-major": [
+      "parameter semantics",
+      "required fields",
+      "campaign naming",
+      "generation behavior",
+      "override precedence"
+    ],
+    "non-breaking": [
+      "Adding a source record",
+      "Adding a distribution context to a source record"
+    ]
+  },
+  "references": [
+    {
+      "title": "URL builders: Collect campaign data with custom URLs",
+      "url": "https://support.google.com/analytics/answer/10917952",
+      "covers": "UTM parameter family, parameter meanings, UTM best practices"
+    },
+    {
+      "title": "Default channel group",
+      "url": "https://support.google.com/analytics/answer/9756891",
+      "covers": "Channel classification rules for manually tagged traffic"
+    },
+    {
+      "title": "Traffic-source dimensions, manual tagging, and auto-tagging",
+      "url": "https://support.google.com/analytics/answer/11242870",
+      "covers": "How UTM parameters map to dimensions; interaction with auto-tagging"
+    },
+    {
+      "title": "About traffic-source dimensions",
+      "url": "https://support.google.com/analytics/answer/15612152",
+      "covers": "Definitions of source, medium, campaign, campaign ID, source platform"
+    }
+  ]
 }

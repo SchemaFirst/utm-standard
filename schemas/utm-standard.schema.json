@@ -1,43 +1,340 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemafirst.org/schemas/utm-standard.schema.json",
+  "$id": "https://www.schemafirst.org/schemas/utm-standard.schema.json",
   "title": "SchemaFirst UTM Standard",
-  "description": "Schema for the SchemaFirst UTM standard and conforming organizational profiles.",
+  "description": "Structure of the SchemaFirst UTM Standard document.",
   "type": "object",
   "required": [
-    "standard",
+    "$id",
+    "name",
+    "id",
     "version",
+    "status",
+    "repository",
+    "inputs",
     "parameters",
-    "campaign",
-    "generation"
+    "minimum-conforming-set",
+    "campaign-naming",
+    "url-assembly",
+    "generation",
+    "provenance-classes",
+    "organization-profile",
+    "versioning",
+    "references"
   ],
+  "$defs": {
+    "requirement": {
+      "enum": [
+        "required",
+        "recommended",
+        "optional",
+        "prohibited"
+      ]
+    },
+    "parameter-name": {
+      "enum": [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_id",
+        "utm_source_platform",
+        "utm_content",
+        "utm_term",
+        "utm_creative_format",
+        "utm_marketing_tactic"
+      ]
+    },
+    "parameter": {
+      "type": "object",
+      "required": [
+        "name",
+        "requirement",
+        "value-source",
+        "derivation",
+        "semantics",
+        "default-basis",
+        "overridable",
+        "google-meaning"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/parameter-name"
+        },
+        "requirement": {
+          "$ref": "#/$defs/requirement"
+        },
+        "value-source": {
+          "type": "string"
+        },
+        "derivation": {
+          "type": "string"
+        },
+        "semantics": {
+          "const": "google-defined"
+        },
+        "default-basis": {
+          "enum": [
+            "google-defined",
+            "schemafirst-default"
+          ]
+        },
+        "overridable": {
+          "enum": [
+            false,
+            "requirement",
+            "source-records-only"
+          ]
+        },
+        "google-meaning": {
+          "type": "string"
+        },
+        "applies-when": {
+          "type": "string"
+        }
+      }
+    }
+  },
   "properties": {
     "$schema": {
       "type": "string",
-      "format": "uri-reference"
+      "format": "uri"
     },
-    "standard": {
-      "const": "schemafirst-utm"
+    "$id": {
+      "type": "string",
+      "format": "uri"
+    },
+    "name": {
+      "type": "string"
+    },
+    "id": {
+      "const": "utm"
     },
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
     },
     "status": {
-      "type": "string",
       "enum": [
         "draft",
-        "stable",
+        "open-for-comment",
+        "published",
         "deprecated"
       ]
     },
-    "extends": {
+    "updated-at": {
       "type": "string",
-      "format": "uri-reference"
+      "format": "date"
     },
-    "organization": {
+    "repository": {
       "type": "string",
-      "minLength": 1
+      "format": "uri"
+    },
+    "license": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "principle": {
+      "type": "string"
+    },
+    "source-registry": {
+      "type": "object",
+      "required": [
+        "index",
+        "record-url-template"
+      ],
+      "properties": {
+        "index": {
+          "type": "string",
+          "format": "uri"
+        },
+        "record-url-template": {
+          "type": "string"
+        },
+        "versioned-independently": {
+          "type": "boolean"
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/parameter"
+      },
+      "minItems": 3
+    },
+    "minimum-conforming-set": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/parameter-name"
+      },
+      "contains": {
+        "const": "utm_campaign"
+      }
+    },
+    "campaign-naming": {
+      "type": "object",
+      "required": [
+        "rule",
+        "precedence",
+        "slug-algorithm",
+        "constraints"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "precedence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slug-algorithm": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "required": [
+            "pattern"
+          ],
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "format": "regex"
+            }
+          }
+        },
+        "must-not-add-unless-part-of-identity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "examples": {
+          "type": "array"
+        }
+      }
+    },
+    "value-format": {
+      "type": "object"
+    },
+    "url-assembly": {
+      "type": "object",
+      "required": [
+        "parameter-order",
+        "rules"
+      ],
+      "properties": {
+        "parameter-order": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter-name"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "required": [
+        "steps",
+        "missing-context"
+      ],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing-context": {
+          "type": "object",
+          "required": [
+            "behavior",
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "object",
+              "required": [
+                "status",
+                "missing"
+              ],
+              "properties": {
+                "status": {
+                  "const": "requires-context"
+                },
+                "missing": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "provenance-classes": {
+      "type": "object",
+      "required": [
+        "google-defined",
+        "schemafirst-default",
+        "organization-defined"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "organization-profile": {
+      "type": "object",
+      "required": [
+        "extends-value",
+        "precedence",
+        "permitted",
+        "not-permitted"
+      ]
+    },
+    "versioning": {
+      "type": "object"
     },
     "references": {
       "type": "array",
@@ -55,249 +352,11 @@
             "type": "string",
             "format": "uri"
           },
-          "publisher": {
-            "type": "string"
-          },
-          "notes": {
+          "covers": {
             "type": "string"
           }
-        },
-        "additionalProperties": false
-      }
-    },
-    "parameters": {
-      "type": "object",
-      "required": [
-        "utm_source",
-        "utm_medium",
-        "utm_campaign"
-      ],
-      "properties": {
-        "utm_source": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_medium": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_campaign": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_id": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_source_platform": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_content": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_term": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_creative_format": {
-          "$ref": "#/$defs/parameterRule"
-        },
-        "utm_marketing_tactic": {
-          "$ref": "#/$defs/parameterRule"
         }
-      },
-      "additionalProperties": {
-        "$ref": "#/$defs/parameterRule"
-      }
-    },
-    "campaign": {
-      "type": "object",
-      "required": [
-        "preferred_input",
-        "fallback_input",
-        "slug_rules"
-      ],
-      "properties": {
-        "preferred_input": {
-          "const": "campaign.slug"
-        },
-        "fallback_input": {
-          "const": "campaign.name"
-        },
-        "slug_rules": {
-          "type": "object",
-          "required": [
-            "case",
-            "separator",
-            "allowed_characters",
-            "remove_punctuation",
-            "collapse_repeated_separators",
-            "trim_separators",
-            "stable_for_campaign_lifetime",
-            "prohibited_components"
-          ],
-          "properties": {
-            "case": {
-              "const": "lowercase"
-            },
-            "separator": {
-              "const": "_"
-            },
-            "allowed_characters": {
-              "const": "a-z0-9_"
-            },
-            "remove_punctuation": {
-              "const": true
-            },
-            "collapse_repeated_separators": {
-              "const": true
-            },
-            "trim_separators": {
-              "const": true
-            },
-            "stable_for_campaign_lifetime": {
-              "const": true
-            },
-            "prohibited_components": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "uniqueItems": true
-            },
-            "date_policy": {
-              "type": "string",
-              "enum": [
-                "only_when_part_of_approved_campaign_identity"
-              ]
-            }
-          },
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
-    "generation": {
-      "type": "object",
-      "required": [
-        "minimum_context",
-        "unknown_context_behavior",
-        "precedence"
-      ],
-      "properties": {
-        "minimum_context": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "contains": {
-            "const": "campaign"
-          },
-          "minContains": 1,
-          "uniqueItems": true
-        },
-        "unknown_context_behavior": {
-          "const": "requires_context"
-        },
-        "precedence": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "const": "organization_canonical_value"
-            },
-            {
-              "const": "schemafirst_canonical_value"
-            },
-            {
-              "const": "schemafirst_deterministic_derivation"
-            },
-            {
-              "const": "requires_context"
-            }
-          ],
-          "items": false
-        },
-        "parameter_order": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true
-        }
-      },
-      "additionalProperties": false
-    },
-    "overrides": {
-      "type": "object",
-      "additionalProperties": {
-        "type": [
-          "object",
-          "string",
-          "boolean",
-          "array",
-          "number",
-          "null"
-        ]
       }
     }
-  },
-  "$defs": {
-    "parameterRule": {
-      "type": "object",
-      "required": [
-        "required",
-        "value_source",
-        "provenance"
-      ],
-      "properties": {
-        "required": {
-          "type": "boolean"
-        },
-        "recommended": {
-          "type": "boolean"
-        },
-        "value_source": {
-          "type": "string",
-          "enum": [
-            "source_registry",
-            "source_registry_context",
-            "campaign",
-            "campaign_id",
-            "source_platform",
-            "asset_context",
-            "keyword_context",
-            "creative_context",
-            "tactic_context",
-            "organization_defined"
-          ]
-        },
-        "provenance": {
-          "type": "string",
-          "enum": [
-            "google-defined",
-            "schemafirst-default",
-            "organization-defined"
-          ]
-        },
-        "organization_override_permitted": {
-          "type": "boolean"
-        },
-        "format": {
-          "type": "object",
-          "properties": {
-            "case": {
-              "type": "string"
-            },
-            "separator": {
-              "type": "string"
-            },
-            "allowed_characters": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        "notes": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    }
-  },
-  "additionalProperties": false
+  }
 }

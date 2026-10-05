@@ -1,0 +1,15 @@
+{
+  "description": "Missing distribution context",
+  "input": {
+    "campaign": {
+      "name": "Spring Product Launch"
+    },
+    "source": "linkedin"
+  },
+  "expected": {
+    "status": "requires-context",
+    "missing": [
+      "distribution-context"
+    ]
+  }
+}

@@ -1,32 +1,38 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "$schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
   "id": "linkedin",
-  "canonical_name": "LinkedIn",
-  "utm_source": "linkedin",
-  "type": "social",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "display-name": "LinkedIn",
+  "canonical-source": "linkedin",
   "aliases": [
     "linkedin.com",
-    "linkedin ads"
+    "lnkd.in",
+    "li"
   ],
+  "category": "social",
   "contexts": {
     "organic": {
+      "description": "Unpaid posts from company pages or employee profiles.",
       "utm_medium": "social",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Organic Social"
+      "intended-google-channel": "Organic Social"
     },
     "paid": {
+      "description": "Sponsored content and LinkedIn Ads.",
       "utm_medium": "paid_social",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Paid Social",
-      "notes": "Google gives paid_social as a best-practice medium example; SchemaFirst adopts it as the canonical paid-social value."
+      "intended-google-channel": "Paid Social"
     }
   },
+  "notes": [],
   "provenance": {
-    "utm_semantics": "google-defined",
-    "canonical_value": "schemafirst-default",
-    "reference_urls": [
-      "https://support.google.com/analytics/answer/10917952",
-      "https://support.google.com/analytics/answer/9756891"
-    ]
-  }
+    "canonical-source": "schemafirst-default",
+    "contexts.organic.utm_medium": "google-defined",
+    "contexts.paid.utm_medium": "schemafirst-default",
+    "aliases": "schemafirst-default",
+    "explanation": "Google lists `social` as an Organic Social medium and classifies social-site traffic with a medium matching paid.* as Paid Social. SchemaFirst selects `paid_social` as the canonical paid medium; Google uses it as an example in its UTM best practices."
+  },
+  "references": [
+    "https://support.google.com/analytics/answer/9756891",
+    "https://support.google.com/analytics/answer/10917952"
+  ]
 }

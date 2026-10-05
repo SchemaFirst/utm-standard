@@ -1,31 +1,34 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "$schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
   "id": "bing",
-  "canonical_name": "Microsoft Bing",
-  "utm_source": "bing",
-  "type": "search",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "display-name": "Microsoft Bing",
+  "canonical-source": "bing",
   "aliases": [
     "bing.com",
-    "microsoft bing"
+    "microsoft_ads",
+    "microsoft_advertising",
+    "bing_ads"
   ],
+  "category": "search",
   "contexts": {
-    "paid_search": {
+    "paid": {
+      "description": "Paid search ads on Microsoft Advertising.",
       "utm_medium": "cpc",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Paid Search"
-    },
-    "organic_search": {
-      "utm_medium": "organic",
-      "provenance": "google-defined",
-      "google_default_channel_intent": "Organic Search"
+      "intended-google-channel": "Paid Search"
     }
   },
+  "notes": [
+    "Organic search results are not manually tagged."
+  ],
   "provenance": {
-    "utm_semantics": "google-defined",
-    "canonical_value": "schemafirst-default",
-    "reference_urls": [
-      "https://support.google.com/analytics/answer/10917952",
-      "https://support.google.com/analytics/answer/9756891"
-    ]
-  }
+    "canonical-source": "schemafirst-default",
+    "contexts.paid.utm_medium": "google-defined",
+    "aliases": "schemafirst-default",
+    "explanation": "Google lists Bing as a search site and classifies search-site traffic with a paid medium (matching ^(.*cp.*|ppc|retargeting|paid.*)$) as Paid Search. SchemaFirst selects `bing` as the canonical value."
+  },
+  "references": [
+    "https://support.google.com/analytics/answer/9756891"
+  ]
 }

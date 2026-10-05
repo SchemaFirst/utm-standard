@@ -1,0 +1,17 @@
+{
+  "description": "Unsupported context",
+  "input": {
+    "campaign": {
+      "name": "Spring Product Launch"
+    },
+    "source": "sms",
+    "distribution-context": "paid"
+  },
+  "expected": {
+    "status": "unsupported-context",
+    "source": "sms",
+    "supported": [
+      "owned"
+    ]
+  }
+}

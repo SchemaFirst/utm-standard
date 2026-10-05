@@ -1,0 +1,46 @@
+{
+  "name": "SchemaFirst UTM Source Registry",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "standard": "https://www.schemafirst.org/standards/utm/standard.json",
+  "record-schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
+  "repository": "https://github.com/SchemaFirst/utm-standard",
+  "sources": [
+    {
+      "id": "google",
+      "url": "https://www.schemafirst.org/standards/utm/sources/google.json"
+    },
+    {
+      "id": "bing",
+      "url": "https://www.schemafirst.org/standards/utm/sources/bing.json"
+    },
+    {
+      "id": "linkedin",
+      "url": "https://www.schemafirst.org/standards/utm/sources/linkedin.json"
+    },
+    {
+      "id": "facebook",
+      "url": "https://www.schemafirst.org/standards/utm/sources/facebook.json"
+    },
+    {
+      "id": "instagram",
+      "url": "https://www.schemafirst.org/standards/utm/sources/instagram.json"
+    },
+    {
+      "id": "reddit",
+      "url": "https://www.schemafirst.org/standards/utm/sources/reddit.json"
+    },
+    {
+      "id": "youtube",
+      "url": "https://www.schemafirst.org/standards/utm/sources/youtube.json"
+    },
+    {
+      "id": "email",
+      "url": "https://www.schemafirst.org/standards/utm/sources/email.json"
+    },
+    {
+      "id": "sms",
+      "url": "https://www.schemafirst.org/standards/utm/sources/sms.json"
+    }
+  ]
+}

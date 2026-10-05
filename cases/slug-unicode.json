@@ -1,0 +1,19 @@
+{
+  "description": "Campaign name with punctuation and accents",
+  "input": {
+    "campaign": {
+      "name": "Café Rewards — Q3 Partner Summit"
+    },
+    "source": "google",
+    "distribution-context": "paid"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.2.0",
+    "parameters": {
+      "utm_source": "google",
+      "utm_medium": "cpc",
+      "utm_campaign": "cafe_rewards_q3_partner_summit"
+    }
+  }
+}

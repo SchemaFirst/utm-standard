@@ -1,27 +1,35 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "$schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
   "id": "email",
-  "canonical_name": "Email",
-  "utm_source": "email",
-  "type": "email",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "display-name": "Email",
+  "canonical-source": "email",
   "aliases": [
     "e-mail",
-    "marketing email"
+    "e_mail",
+    "newsletter"
   ],
+  "category": "email",
   "contexts": {
-    "marketing_email": {
+    "owned": {
+      "description": "Email sent to the organization's own lists, including newsletters, nurture, and transactional email.",
       "utm_medium": "email",
-      "provenance": "google-defined",
-      "google_default_channel_intent": "Email"
+      "intended-google-channel": "Email"
     }
   },
+  "notes": [
+    "Organizations that need to distinguish lists or senders should define proprietary source records in an organization profile rather than changing utm_medium.",
+    "Use utm_content to distinguish links within the same email."
+  ],
   "provenance": {
-    "utm_semantics": "google-defined",
-    "canonical_value": "schemafirst-default",
-    "reference_urls": [
-      "https://support.google.com/analytics/answer/10917952",
-      "https://support.google.com/analytics/answer/9756891"
-    ]
+    "canonical-source": "schemafirst-default",
+    "contexts.owned.utm_medium": "google-defined",
+    "aliases": "schemafirst-default",
+    "explanation": "Google classifies traffic as Email when source or medium is email, e-mail, e_mail, or e mail. SchemaFirst selects `email` for both."
   },
-  "notes": "Organizations that require newsletter, publication, or sending-system granularity should override utm_source through an organizational profile while retaining medium=email."
+  "references": [
+    "https://support.google.com/analytics/answer/9756891",
+    "https://support.google.com/analytics/answer/10917952"
+  ]
 }

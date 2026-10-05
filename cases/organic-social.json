@@ -1,0 +1,21 @@
+{
+  "description": "Organic social",
+  "input": {
+    "campaign": {
+      "name": "Spring Product Launch"
+    },
+    "source": "linkedin",
+    "distribution-context": "organic",
+    "destination-url": "https://example.com/product"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.2.0",
+    "parameters": {
+      "utm_source": "linkedin",
+      "utm_medium": "social",
+      "utm_campaign": "spring_product_launch"
+    },
+    "url": "https://example.com/product?utm_source=linkedin&utm_medium=social&utm_campaign=spring_product_launch"
+  }
+}

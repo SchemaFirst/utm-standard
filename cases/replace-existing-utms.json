@@ -1,0 +1,21 @@
+{
+  "description": "Existing UTMs are replaced, other parameters and the fragment are kept",
+  "input": {
+    "campaign": {
+      "name": "Spring Product Launch"
+    },
+    "source": "email",
+    "distribution-context": "owned",
+    "destination-url": "https://example.com/product?ref=nav&utm_source=old#pricing"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.2.0",
+    "parameters": {
+      "utm_source": "email",
+      "utm_medium": "email",
+      "utm_campaign": "spring_product_launch"
+    },
+    "url": "https://example.com/product?ref=nav&utm_source=email&utm_medium=email&utm_campaign=spring_product_launch#pricing"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "Alias resolves to canonical source",
+  "input": {
+    "campaign": {
+      "slug": "spring_product_launch"
+    },
+    "source": "fb",
+    "distribution-context": "paid"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.2.0",
+    "parameters": {
+      "utm_source": "facebook",
+      "utm_medium": "paid_social",
+      "utm_campaign": "spring_product_launch"
+    }
+  }
+}

@@ -1,31 +1,40 @@
 {
-  "$schema": "https://schemafirst.org/schemas/utm-source.schema.json",
+  "$schema": "https://www.schemafirst.org/schemas/utm-source.schema.json",
   "id": "youtube",
-  "canonical_name": "YouTube",
-  "utm_source": "youtube",
-  "type": "video",
+  "registry-version": "0.2.0",
+  "status": "draft",
+  "display-name": "YouTube",
+  "canonical-source": "youtube",
   "aliases": [
     "youtube.com",
-    "youtu.be"
+    "youtu.be",
+    "yt"
   ],
+  "category": "video",
   "contexts": {
-    "organic_video": {
+    "organic": {
+      "description": "Links in video descriptions, channel pages, comments, and community posts.",
       "utm_medium": "video",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Organic Video"
+      "intended-google-channel": "Organic Video"
     },
-    "paid_video": {
+    "paid": {
+      "description": "YouTube ads not auto-tagged by Google Ads.",
       "utm_medium": "paid_video",
-      "provenance": "schemafirst-default",
-      "google_default_channel_intent": "Paid Video"
+      "intended-google-channel": "Paid Video"
     }
   },
+  "notes": [
+    "YouTube ads bought through Google Ads with auto-tagging are classified by Google Analytics from the ad network type, not from UTMs.",
+    "Google evaluates social channels before video channels. Final classification depends on Google's maintained source-category list."
+  ],
   "provenance": {
-    "utm_semantics": "google-defined",
-    "canonical_value": "schemafirst-default",
-    "reference_urls": [
-      "https://support.google.com/analytics/answer/10917952",
-      "https://support.google.com/analytics/answer/9756891"
-    ]
-  }
+    "canonical-source": "schemafirst-default",
+    "contexts.organic.utm_medium": "schemafirst-default",
+    "contexts.paid.utm_medium": "schemafirst-default",
+    "aliases": "schemafirst-default",
+    "explanation": "Google classifies video-site traffic with a paid medium as Paid Video and traffic with a medium matching ^(.*video.*)$ as Organic Video. SchemaFirst selects `video` and `paid_video`."
+  },
+  "references": [
+    "https://support.google.com/analytics/answer/9756891"
+  ]
 }
