@@ -12,11 +12,7 @@ from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STANDARD = json.load(open(os.path.join(ROOT, "standards/utm/standard.json")))
-SOURCES = [
-    json.load(open(f))
-    for f in glob.glob(os.path.join(ROOT, "standards/utm/sources/*.json"))
-    if not f.endswith("index.json")
-]
+SOURCES = list(STANDARD["sources"].values())
 OPTIONAL_INPUTS = {
     "utm_id": "campaign-id",
     "utm_source_platform": "source-platform",

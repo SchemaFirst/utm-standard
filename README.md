@@ -3,12 +3,15 @@
 Deterministic rules for generating UTM parameters. Given the same campaign, source, and distribution context, two conforming agents generate the same UTM.
 
 - Website: [www.schemafirst.org/standards/utm](https://www.schemafirst.org/standards/utm)
-- Standard: [`standards/utm/standard.json`](standards/utm/standard.json)
-- Source Registry: [`standards/utm/sources/`](standards/utm/sources/)
-- Schemas: [`schemas/utm-standard.schema.json`](schemas/utm-standard.schema.json), [`schemas/utm-source.schema.json`](schemas/utm-source.schema.json)
+- Standard: [`standards/utm/standard.json`](standards/utm/standard.json), including its `sources`
+- Schema: [`schemas/utm-standard.schema.json`](schemas/utm-standard.schema.json)
 - Conformance cases: [`cases/`](cases/)
 
-## Version 0.2.0 (draft)
+## Version 0.3.0 (draft)
+
+0.3.0 moves the sources into the standard. They were one file per source plus `sources/index.json` and `utm-source.schema.json`; they are now the `sources` object in `standard.json`, keyed by canonical source, and validated by `$defs/source` in `utm-standard.schema.json`. `source-registry` is removed, and each source drops `id`, `registry-version`, and `status` (the standard's own apply). The `overridable` value `source-records-only` is now `sources-only`. Source values and generation behavior are unchanged.
+
+## Version 0.2.0
 
 0.2.0 adopts the naming shared by all SchemaFirst standards: kebab-case for SchemaFirst keys and values. Generation behavior is unchanged from 0.1.0; names are not.
 
@@ -32,9 +35,9 @@ A conforming implementation produces exactly the `expected` output for every fil
 python3 scripts/check-conformance.py
 ```
 
-## Source Registry
+## Sources
 
-The starter registry covers Google, Microsoft Bing, LinkedIn, Facebook, Instagram, Reddit, YouTube, Email, and SMS. Each record is its own file so changes are reviewed individually. Ambiguous or profile-dependent cases are added deliberately, not inferred. The registry is versioned independently of the standard.
+The standard's `sources` cover Google, Microsoft Bing, LinkedIn, Facebook, Instagram, Reddit, YouTube, Email, and SMS. Ambiguous or profile-dependent cases are added deliberately, not inferred. Adding a source or a distribution context is a non-breaking change to the standard.
 
 ## External basis
 

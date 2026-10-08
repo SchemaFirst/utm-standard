@@ -10,7 +10,7 @@
   },
   "expected": {
     "status": "ok",
-    "standard-version": "0.2.0",
+    "standard-version": "0.3.0",
     "parameters": {
       "utm_source": "email",
       "utm_medium": "email",

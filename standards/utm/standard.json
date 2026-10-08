@@ -1,20 +1,15 @@
 {
   "$schema": "https://www.schemafirst.org/schemas/utm-standard.schema.json",
-  "$id": "https://www.schemafirst.org/standards/utm/0.2",
+  "$id": "https://www.schemafirst.org/standards/utm/0.3",
   "name": "SchemaFirst UTM Standard",
   "id": "utm",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "status": "draft",
-  "updated-at": "2026-10-04",
+  "updated-at": "2026-10-07",
   "repository": "https://github.com/SchemaFirst/utm-standard",
   "license": "Apache-2.0",
   "summary": "Deterministic rules for generating UTM parameters. Given the same campaign, source, and distribution context, two conforming agents generate the same UTM.",
   "principle": "Same context + same standard = same UTM.",
-  "source-registry": {
-    "index": "https://www.schemafirst.org/standards/utm/sources/index.json",
-    "record-url-template": "https://www.schemafirst.org/standards/utm/sources/{source}.json",
-    "versioned-independently": true
-  },
   "inputs": {
     "required": [
       "campaign",
@@ -32,8 +27,8 @@
     ],
     "definitions": {
       "campaign": "The approved campaign identity. An object with `slug` (preferred) and/or `name`.",
-      "source": "A canonical source or alias from the Source Registry, e.g. `linkedin`.",
-      "distribution-context": "How the asset is distributed for that source, e.g. `organic`, `paid`, `owned`, `display`. Must be a context supported by the source record.",
+      "source": "A canonical source or alias from `sources`, e.g. `linkedin`.",
+      "distribution-context": "How the asset is distributed for that source, e.g. `organic`, `paid`, `owned`, `display`. Must be one of that source's `contexts`.",
       "destination-url": "The absolute URL the tracking parameters are appended to."
     }
   },
@@ -41,21 +36,21 @@
     {
       "name": "utm_source",
       "requirement": "required",
-      "value-source": "Source Registry",
-      "derivation": "The `canonical-source` of the resolved source record.",
+      "value-source": "`sources`",
+      "derivation": "The `canonical-source` of the resolved source.",
       "semantics": "google-defined",
       "default-basis": "schemafirst-default",
-      "overridable": "source-records-only",
+      "overridable": "sources-only",
       "google-meaning": "The referrer of the traffic, such as a search engine, newsletter, or other source."
     },
     {
       "name": "utm_medium",
       "requirement": "required",
       "value-source": "Source + distribution context",
-      "derivation": "`contexts[distribution-context].utm_medium` of the resolved source record.",
+      "derivation": "`contexts[distribution-context].utm_medium` of the resolved source.",
       "semantics": "google-defined",
       "default-basis": "schemafirst-default",
-      "overridable": "source-records-only",
+      "overridable": "sources-only",
       "google-meaning": "The marketing medium, such as cpc, banner, or email newsletter."
     },
     {
@@ -216,9 +211,9 @@
   },
   "generation": {
     "steps": [
-      "Resolve `source` to a registry record by exact match on `canonical-source` or `aliases`, case-insensitive.",
-      "Resolve `distribution-context` against the record's `contexts`.",
-      "Set utm_source and utm_medium from the record.",
+      "Resolve `source` to an entry in `sources` by exact match on `canonical-source` or `aliases`, case-insensitive.",
+      "Resolve `distribution-context` against that source's `contexts`.",
+      "Set utm_source and utm_medium from that source.",
       "Set utm_campaign from campaign naming precedence.",
       "Set recommended and optional parameters only from supplied inputs. Never invent values.",
       "Apply the organization profile, if any.",
@@ -252,7 +247,7 @@
     },
     "success-response": {
       "status": "ok",
-      "standard-version": "0.2.0",
+      "standard-version": "0.3.0",
       "parameters": {
         "utm_source": "linkedin",
         "utm_medium": "social",
@@ -267,11 +262,11 @@
     "organization-defined": "Values supplied by the adopting organization through an explicit organization profile. Whether a default may be replaced is stated by each parameter's `overridable`."
   },
   "organization-profile": {
-    "extends-value": "https://www.schemafirst.org/standards/utm/0.2",
+    "extends-value": "https://www.schemafirst.org/standards/utm/0.3",
     "precedence": "Organization profile > SchemaFirst default. Google-defined parameter semantics cannot be overridden.",
     "permitted": [
       "Require recommended or optional parameters.",
-      "Define proprietary source records.",
+      "Define proprietary sources.",
       "Define additional distribution contexts.",
       "Override defaults marked as overridable.",
       "Define where organization-owned values come from."
@@ -282,7 +277,7 @@
       "Change the campaign slug algorithm."
     ],
     "example": {
-      "extends": "https://www.schemafirst.org/standards/utm/0.2",
+      "extends": "https://www.schemafirst.org/standards/utm/0.3",
       "organization": "Example Company",
       "overrides": {
         "utm_id": {
@@ -301,9 +296,312 @@
       "override precedence"
     ],
     "non-breaking": [
-      "Adding a source record",
-      "Adding a distribution context to a source record"
+      "Adding a source",
+      "Adding a distribution context to a source"
     ]
+  },
+  "sources": {
+    "google": {
+      "display-name": "Google",
+      "canonical-source": "google",
+      "aliases": [
+        "google.com",
+        "google_ads",
+        "googleads",
+        "adwords"
+      ],
+      "category": "search",
+      "contexts": {
+        "paid": {
+          "description": "Paid search ads.",
+          "utm_medium": "cpc",
+          "intended-google-channel": "Paid Search"
+        },
+        "display": {
+          "description": "Display and banner ads.",
+          "utm_medium": "display",
+          "intended-google-channel": "Display"
+        }
+      },
+      "notes": [
+        "When Google Ads auto-tagging (GCLID) is enabled, Google Analytics uses auto-tagged values for source and medium. Manual UTMs remain useful for utm_campaign and for traffic where GCLID cannot be used.",
+        "Organic search results are not manually tagged."
+      ],
+      "provenance": {
+        "canonical-source": "google-defined",
+        "contexts.paid.utm_medium": "google-defined",
+        "contexts.display.utm_medium": "google-defined",
+        "aliases": "schemafirst-default",
+        "explanation": "Google documents `google` / `cpc` as the source / medium for paid search, and lists `display` as a Display channel medium."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891",
+        "https://support.google.com/analytics/answer/15612152",
+        "https://support.google.com/analytics/answer/11242870"
+      ]
+    },
+    "bing": {
+      "display-name": "Microsoft Bing",
+      "canonical-source": "bing",
+      "aliases": [
+        "bing.com",
+        "microsoft_ads",
+        "microsoft_advertising",
+        "bing_ads"
+      ],
+      "category": "search",
+      "contexts": {
+        "paid": {
+          "description": "Paid search ads on Microsoft Advertising.",
+          "utm_medium": "cpc",
+          "intended-google-channel": "Paid Search"
+        }
+      },
+      "notes": [
+        "Organic search results are not manually tagged."
+      ],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.paid.utm_medium": "google-defined",
+        "aliases": "schemafirst-default",
+        "explanation": "Google lists Bing as a search site and classifies search-site traffic with a paid medium (matching ^(.*cp.*|ppc|retargeting|paid.*)$) as Paid Search. SchemaFirst selects `bing` as the canonical value."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891"
+      ]
+    },
+    "linkedin": {
+      "display-name": "LinkedIn",
+      "canonical-source": "linkedin",
+      "aliases": [
+        "linkedin.com",
+        "lnkd.in",
+        "li"
+      ],
+      "category": "social",
+      "contexts": {
+        "organic": {
+          "description": "Unpaid posts from company pages or employee profiles.",
+          "utm_medium": "social",
+          "intended-google-channel": "Organic Social"
+        },
+        "paid": {
+          "description": "Sponsored content and LinkedIn Ads.",
+          "utm_medium": "paid_social",
+          "intended-google-channel": "Paid Social"
+        }
+      },
+      "notes": [],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.organic.utm_medium": "google-defined",
+        "contexts.paid.utm_medium": "schemafirst-default",
+        "aliases": "schemafirst-default",
+        "explanation": "Google lists `social` as an Organic Social medium and classifies social-site traffic with a medium matching paid.* as Paid Social. SchemaFirst selects `paid_social` as the canonical paid medium; Google uses it as an example in its UTM best practices."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891",
+        "https://support.google.com/analytics/answer/10917952"
+      ]
+    },
+    "facebook": {
+      "display-name": "Facebook",
+      "canonical-source": "facebook",
+      "aliases": [
+        "facebook.com",
+        "fb",
+        "m.facebook.com"
+      ],
+      "category": "social",
+      "contexts": {
+        "organic": {
+          "description": "Unpaid posts from Facebook pages, groups, or profiles.",
+          "utm_medium": "social",
+          "intended-google-channel": "Organic Social"
+        },
+        "paid": {
+          "description": "Facebook ads purchased through Meta Ads.",
+          "utm_medium": "paid_social",
+          "intended-google-channel": "Paid Social"
+        }
+      },
+      "notes": [
+        "Facebook and Instagram are separate sources even when bought through the same Meta Ads account, following Google's guidance to use one distinct source per sub-platform."
+      ],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.organic.utm_medium": "google-defined",
+        "contexts.paid.utm_medium": "schemafirst-default",
+        "aliases": "schemafirst-default",
+        "explanation": "Google's best practices give `fb` as an example source. SchemaFirst selects the unabbreviated `facebook` as canonical and registers `fb` as an alias."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891",
+        "https://support.google.com/analytics/answer/10917952"
+      ]
+    },
+    "instagram": {
+      "display-name": "Instagram",
+      "canonical-source": "instagram",
+      "aliases": [
+        "instagram.com",
+        "ig",
+        "insta"
+      ],
+      "category": "social",
+      "contexts": {
+        "organic": {
+          "description": "Unpaid posts, stories, reels, and bio links.",
+          "utm_medium": "social",
+          "intended-google-channel": "Organic Social"
+        },
+        "paid": {
+          "description": "Instagram ads purchased through Meta Ads.",
+          "utm_medium": "paid_social",
+          "intended-google-channel": "Paid Social"
+        }
+      },
+      "notes": [
+        "Instagram and Facebook are separate sources even when bought through the same Meta Ads account."
+      ],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.organic.utm_medium": "google-defined",
+        "contexts.paid.utm_medium": "schemafirst-default",
+        "aliases": "schemafirst-default",
+        "explanation": "Google's best practices give `insta` as an example source. SchemaFirst selects the unabbreviated `instagram` as canonical and registers `insta` and `ig` as aliases."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891",
+        "https://support.google.com/analytics/answer/10917952"
+      ]
+    },
+    "reddit": {
+      "display-name": "Reddit",
+      "canonical-source": "reddit",
+      "aliases": [
+        "reddit.com",
+        "old.reddit.com"
+      ],
+      "category": "social",
+      "contexts": {
+        "organic": {
+          "description": "Unpaid posts and comments.",
+          "utm_medium": "social",
+          "intended-google-channel": "Organic Social"
+        },
+        "paid": {
+          "description": "Promoted posts and Reddit Ads.",
+          "utm_medium": "paid_social",
+          "intended-google-channel": "Paid Social"
+        }
+      },
+      "notes": [],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.organic.utm_medium": "google-defined",
+        "contexts.paid.utm_medium": "schemafirst-default",
+        "aliases": "schemafirst-default",
+        "explanation": "Follows the same social mapping as other social platforms."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891"
+      ]
+    },
+    "youtube": {
+      "display-name": "YouTube",
+      "canonical-source": "youtube",
+      "aliases": [
+        "youtube.com",
+        "youtu.be",
+        "yt"
+      ],
+      "category": "video",
+      "contexts": {
+        "organic": {
+          "description": "Links in video descriptions, channel pages, comments, and community posts.",
+          "utm_medium": "video",
+          "intended-google-channel": "Organic Video"
+        },
+        "paid": {
+          "description": "YouTube ads not auto-tagged by Google Ads.",
+          "utm_medium": "paid_video",
+          "intended-google-channel": "Paid Video"
+        }
+      },
+      "notes": [
+        "YouTube ads bought through Google Ads with auto-tagging are classified by Google Analytics from the ad network type, not from UTMs.",
+        "Google evaluates social channels before video channels. Final classification depends on Google's maintained source-category list."
+      ],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.organic.utm_medium": "schemafirst-default",
+        "contexts.paid.utm_medium": "schemafirst-default",
+        "aliases": "schemafirst-default",
+        "explanation": "Google classifies video-site traffic with a paid medium as Paid Video and traffic with a medium matching ^(.*video.*)$ as Organic Video. SchemaFirst selects `video` and `paid_video`."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891"
+      ]
+    },
+    "email": {
+      "display-name": "Email",
+      "canonical-source": "email",
+      "aliases": [
+        "e-mail",
+        "e_mail",
+        "newsletter"
+      ],
+      "category": "email",
+      "contexts": {
+        "owned": {
+          "description": "Email sent to the organization's own lists, including newsletters, nurture, and transactional email.",
+          "utm_medium": "email",
+          "intended-google-channel": "Email"
+        }
+      },
+      "notes": [
+        "Organizations that need to distinguish lists or senders should define proprietary sources in an organization profile rather than changing utm_medium.",
+        "Use utm_content to distinguish links within the same email."
+      ],
+      "provenance": {
+        "canonical-source": "schemafirst-default",
+        "contexts.owned.utm_medium": "google-defined",
+        "aliases": "schemafirst-default",
+        "explanation": "Google classifies traffic as Email when source or medium is email, e-mail, e_mail, or e mail. SchemaFirst selects `email` for both."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891",
+        "https://support.google.com/analytics/answer/10917952"
+      ]
+    },
+    "sms": {
+      "display-name": "SMS",
+      "canonical-source": "sms",
+      "aliases": [
+        "text",
+        "text_message",
+        "mms"
+      ],
+      "category": "sms",
+      "contexts": {
+        "owned": {
+          "description": "Text messages sent to the organization's own subscribers.",
+          "utm_medium": "sms",
+          "intended-google-channel": "SMS"
+        }
+      },
+      "notes": [],
+      "provenance": {
+        "canonical-source": "google-defined",
+        "contexts.owned.utm_medium": "google-defined",
+        "aliases": "schemafirst-default",
+        "explanation": "Google classifies traffic as SMS when source or medium exactly matches `sms`."
+      },
+      "references": [
+        "https://support.google.com/analytics/answer/9756891"
+      ]
+    }
   },
   "references": [
     {
